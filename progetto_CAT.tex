@@ -1,0 +1,357 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\setcounter{section}{-1}
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{mathtools}  
+\usepackage{diffcoeff}  
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{makeidx}
+\date{2021/2022}
+\title{Progetto di Controlli Automatici T, gruppo A \\
+Progetto Tipologia C - Traccia 1 \\
+---\\
+Controllo del motore di un'automobile 
+}
+\author{Andrea Belano\\ Gabriele Ceccolini\\ Filippo Loddo\\ Simone Merenda}
+
+\begin{document}
+\maketitle
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{dio.png}
+\end{figure}
+
+\newpage
+\renewcommand*\contentsname{Indice}
+\tableofcontents
+\newpage
+\section{Introduzione e specifiche}
+
+Si consideri la modellazione di un motore a scoppio con una massa d'aria nel collettore di aspirazione del pistone pari a $m(t)$ e una velocità angolare dell'albero di trasmissione pari a $\omega(t)$. 
+\subsection{Dinamica del sistema}
+Consideriamo inoltre la dinamica del sistema composta dalle seguenti equazioni differenziali: 
+\begin{subequations}
+\begin{equation}\label{1a}
+    \dot{m} = \gamma_1(1-\cos(\beta\theta - \psi))-\gamma_2\omega m 
+\end{equation}
+\begin{equation}
+    J\dot{\omega} = \delta_1 m - \delta_2 \omega - \delta_3 \omega^3
+\end{equation}
+\end{subequations}
+Dove: \newline
+\begin{itemize}
+    \item $\theta(t)$ rappresenta l'angolo di accelerazione
+    \item $\gamma_1(1-\cos(\beta\theta - \psi))$ modella la caratteristica intrinseca della valvola.
+    \item $J$ rappresenta il momento d'inerzia equivalente del sistema automobile.
+    \item $\delta_1 m$ descrive la coppia trasmessa all'albero motore.
+    \item $\delta_2 \omega$, con  modella l'attrito nel motore.
+    \item $\delta_3 \omega^2$ descrive la
+resistenza dell'aria.
+\end{itemize} 
+Con $\gamma_1,\psi,J, \delta_1,\delta_2,\delta_3 \in  \mathbb{R}$. \newline
+\linebreak
+Si suppone inoltre di potere misurare la velocità angolare dell'albero di trasmissione $\omega(t)$.
+
+\section{Linearizzazione del sistema}
+\subsection{Dinamica in forma di stato}
+Per prima cosa si vuole portare il sistema (1) nella forma di stato
+\begin{subequations}
+\begin{equation}
+    \dot{x} = f(x,u)
+\end{equation}
+\begin{equation}
+    y=h(x,u).
+\end{equation}
+\end{subequations}
+Definiamo la variabile di stato come 
+\begin{equation}
+    x=\begin{pmatrix}
+x_1\\
+x_2
+\end{pmatrix} = \begin{pmatrix}
+m\\
+\omega
+\end{pmatrix}
+\end{equation}
+Imponiamo $\theta$ e $\omega$ rispettivamente come variabile d'ingresso e di uscita
+\begin{subequations}
+\begin{equation}
+    \theta = u
+\end{equation}
+\begin{equation}
+    \omega = y
+\end{equation}
+\end{subequations}
+
+La funzione di stato di $f(x)$ si presenta nella forma
+\begin{subequations}
+\begin{equation}
+    \dot{x} = \begin{pmatrix}
+\dot{x_1}\\
+\dot{x_2}
+\end{pmatrix} = 
+\begin{pmatrix}
+\gamma_1 - \gamma_1 cos(\beta u(t) - \psi) - \gamma_2 x_1 x_2 \\
+\frac{\delta_1}{J}x_1 - \frac{\delta_2}{J}x_2 - \delta_3 x_2^2 
+\end{pmatrix} = \\
+\begin{pmatrix}
+f_1(x,u) \\
+f_2(x,u)
+\end{pmatrix} = f(x,u)
+\end{equation}
+\begin{equation}
+    y(t)=h(x,u)=x_2(t)
+\end{equation}
+\end{subequations}
+Notare come la funzione di uscita $y(t)$ dipende solo da $x_2$ in quanto $y(t)=\omega(t)$.
+\subsection{Ricerca coppia di equilibrio}
+A questo punto partendo dal valore di equilibrio della pulsazione $\omega_e$ si deve trovare l'intera coppia di equilibrio $(x_e, u_e)$.
+\newline Per fare questo riscriviamo le equazioni (5) sostituendo $x_2$ con il corrispettivo equilibrio $\omega_e$
+\begin{equation}
+    x_{2e} =\omega_e = 10
+\end{equation}\linebreak Similmente le costanti verranno sostituite con i valori indicati nella tabella
+\begin{center}
+   \begin{tabular}{ |c|c| } 
+ \hline
+ \gamma_1 & 0,5 \\ 
+ \hline
+ \gamma_2 & 0,1 \\ 
+ \hline
+ \beta & 1,1 \\ 
+ \hline
+ \psi & 0,02 \\ 
+ \hline
+ \delta_1 & 5\cdot10^4 \\ 
+ \hline
+ \delta_2 & 0,1 \\ 
+ \hline
+ \delta_3 & 0,01 \\
+ \hline
+ J  & 40 \\
+ \hline
+ \omega_e & 10 \\
+ \hline
+\end{tabular}
+\end{center}
+Otteniamo quindi un sistema di due equazioni in due incognite ($x_{1e} , u_e$)
+\begin{equation}
+    \begin{cases}
+    0,5 - 0,5 \cos{1,1 u_e - 0,02} - 0,1  x_{1e} 10 = 0 \\
+    \frac{50 \cdot 10^4}{40} x_{1e}- \frac{0,1}{40}10 - \frac{0,01}{40}10^2 = 0
+    \end{cases}
+\end{equation}
+Risolvendo il sistema otteniamo i valori di equilibrio cercati
+\begin{equation}
+    \begin{cases}
+    x_{1e} =0,00004\\
+    u_e = 0,03 
+    \end{cases}
+\end{equation}
+In particolare l'equazione da cui si ricava la $u_e$
+\begin{equation}
+    0,5 -0,5\cos{1,1u_e-0,02}-\frac{1}{25000} = 0
+\end{equation}
+ha due zeri (oltre alle infinite soluzioni periodiche), in particolare uno negativo ($u_e = -0,007,u_e=0,03$).
+Scegliamo arbitrariamente lo zero positivo $u_e=0,03$.
+Infine approssimando $x_{1e}$ a 0, otteniamo la seguente coppia di equilibri.
+\begin{equation}
+    (x_e, u_e) = ( (x_{1e} = 0, x_{2e}= 10) , u_e = 0,03)) 
+\end{equation}
+\subsection{Linearizzazione del sistema non lineare nell'equilibrio }
+Avendo trovato la coppia di equilibrio, procedo nel linearizzare il sistema non lineare (2), cosi da attenere un sistema linearizzato del tipo
+\begin{subequations}
+\begin{equation}
+    \delta\dot{x}=A\delta x + B\delta u
+\end{equation}
+\begin{equation}
+    \delta y=C\delta x + D\delta u
+\end{equation}
+\end{subequations}
+Per trovare $\delta \dot{x_e}$ imposto l'equazione alle derivate parziali
+\begin{equation}
+    \delta \dot{x_e} = \diffp{f}{x}_{\substack{x=(0,10)\\ u=0,03}} \delta x(t) + \diffp{f}{u}_{\substack{x=(0,10)\\ u=0,03}} \delta u(t)
+\end{equation}
+Calcolo la Jacobiana $\diffp{f}{x}$
+\begin{equation}
+   \diffp{f}{x}=\begin{pmatrix}
+   \diffp{f_1}{x_1} & \diffp{f_1}{x_2} \\
+   \diffp{f_2}{x_1} & \diffp{f_2}{x_2}
+   \end{pmatrix} = \begin{pmatrix}
+   -0,1 x_2 & -0,1 x_1 \\
+   1250 & -0,1/40-0,02 x_2
+   \end{pmatrix}
+\end{equation}
+\newpage
+Ora calcolando la Jacobiana nell'equilibrio ottengo la matrice $A_e$
+\begin{equation}
+    A_e = \diffp{f}{x}_{\substack{x=(0,10)\\ u=0,03}}=\begin{pmatrix}
+    -1 & 0 \\
+    1250 & -0,2
+    \end{pmatrix}
+\end{equation}
+Ora calcolando gli autovalori di $A_e$
+\begin{subequations}
+\begin{equation}
+    \det\begin{pmatrix}
+    -1-\lambda & 0 \\
+    1250 & -0,2-\lambda
+    \end{pmatrix}=0
+\end{equation}
+\begin{equation}
+    \lambda^2 + 1,2\lambda + \frac{1}{5}=0
+\end{equation}
+\begin{equation}
+    \lambda_{1,2} = (-1, -0,2)
+\end{equation}
+\end{subequations}
+Ottengo (-1, -0,2) come autovalori. Possiamo dedurre quindi che il sistema è \emph{asintoticamente stabile} poichè ha tutti gli autovalori con parte reale negativa.
+\\
+\linebreak
+Similmente calcolo la Jacobiana $\diffp{f}{u}$
+\begin{equation}
+   \diffp{f}{u}=\begin{pmatrix}
+   \diffp{f_1}{u}\\
+   \diffp{f_2}{u}
+   \end{pmatrix} = \begin{pmatrix}
+   0,55 \sin(1,1 u -0,02) \\
+   0
+   \end{pmatrix}
+\end{equation}
+Calcolando la Jacobiana nell'equilibrio ottengo la matrice $B_e$
+\begin{equation}
+    B_e = \diffp{f}{u}_{\substack{x=(0,10)\\ u=0,03}}=\begin{pmatrix}
+    0,007 \\
+    0
+    \end{pmatrix}
+\end{equation}
+
+Similmente calcolo $C_e$
+\begin{equation}
+    C_e = \diffp{h}{x}_{\substack{x=(0,10)\\ u=0,03}}=\begin{pmatrix}
+    0 & 1
+    \end{pmatrix}
+\end{equation}
+
+La matrice $D_e$ invece è nulla.
+\begin{equation}
+    D_e = 0
+\end{equation}
+
+\section{Funzione di trasferimento}
+E' necessario calcolare la funzione di trasferimento da $\delta u$ a $\delta y$, ovvero la funzione $G(s)$ tale che
+\begin{equation}
+    \delta Y(s) = G(s)\delta U(s)
+\end{equation}
+Ricordiamo che la funzione di trasferimento $G(s)$ si può scrivere come
+\begin{equation}
+    G(s) = C(sI - A)^{-1} B + D
+\end{equation}
+Quindi sostituisco con le matrici calcolate in precedenza 
+\begin{subequations}
+\begin{equation}
+    G(s)=\begin{pmatrix}
+    0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+    s+1 & 0 \\
+    -1250 & s+0,2
+    \end{pmatrix}^{-1}
+    \begin{pmatrix}
+    0,007 \\
+    0
+    \end{pmatrix} =
+\end{equation}
+\begin{equation}
+    = \frac{\begin{pmatrix}
+    0 & 1
+    \end{pmatrix} 
+    adj\begin{pmatrix}
+         s+1 & 0 \\
+    -1250 & s+0,2
+    \end{pmatrix}  \begin{pmatrix}
+    0,007 \\
+    0
+    \end{pmatrix}}
+    {\det\begin{pmatrix}
+        s+1 & 0 \\
+    -1250 & s+0,2
+    \end{pmatrix}}
+\end{equation}
+Calcolo il determinante al denominatore
+\begin{equation}
+    \det\begin{pmatrix}
+     s+1 & 0 \\
+    -1250 & s+0,2
+    \end{pmatrix} = (s+1)(s+0,2)
+\end{equation}
+Calcolo la matrice aggiunta
+\begin{equation}
+    adj\begin{pmatrix}
+         s+1 & 0 \\
+    -1250 & s+0,2
+    \end{pmatrix} =
+    \begin{pmatrix}
+    s+0,2 & 1250 \\
+    0 & s+1
+    \end{pmatrix}^{T} =
+    \begin{pmatrix}
+         s+0,2 & 0 \\
+         1250 & s+1
+    \end{pmatrix}
+\end{equation}
+
+Possiamo quindi riscrivere $G(s)$ come
+\begin{equation}
+    G(s)= \frac{\begin{pmatrix}
+    0 & 1
+    \end{pmatrix} 
+    \begin{pmatrix}
+         s+0,2 & 0 \\
+    1250 & s+1
+    \end{pmatrix}  \begin{pmatrix}
+    0,007 \\
+    0
+    \end{pmatrix}}
+    {(s+1)(s+0,2)}=
+\end{equation}
+\begin{equation}
+    = \frac{\begin{pmatrix}
+    1250 & s+1
+    \end{pmatrix} 
+    \begin{pmatrix}
+    0,007 \\
+    0
+    \end{pmatrix}}
+    {(s+1)(s+0,2)} = 
+\end{equation}
+\begin{equation}
+=\frac{8,75}{(s+1)(s+0,2)}=    
+\end{equation}
+Moltiplico numeratore e denominatore per 5
+\begin{equation}
+   = \frac{43,75}{(s+1)(5s+1)}
+\end{equation}
+\end{subequations}
+
+
+
+
+\newpage
+\section{Progettazione regolatore}
+\subsection{Prestazioni Statiche}
+\subsection{Prestazioni Dinamiche}
+
+\section{Test del regolatore sul sistema non linearizzato}
+\section{Punti opzionali}
+
+\end{document}
