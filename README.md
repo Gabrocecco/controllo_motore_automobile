@@ -1,3 +1,2 @@
-# controllo_motore_automobile
-Progetto c1 , Controlli Automatici T
-[Progetto_C1_A.pdf](https://github.com/Gabrocecco/controllo_motore_automobile/files/8355621/Progetto_C1_A.pdf)
+Progetto c1 , del corso Controlli Automatici T
+Autori: Andrea Belano, Gabriele Ceccolini, Filippo Loddo, Merenda Simone
